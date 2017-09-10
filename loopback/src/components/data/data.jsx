@@ -20,16 +20,19 @@ class AnalysisContent extends React.Component {
     if(this.state.screenName === ''){
       this.setState({ error: 'Please enter a Screen Name.'})
     } else {
+      console.log('sending screen name');
+      console.log(screenName);
+      console.log(this.state.screenName);
       this.setState({submitting: true}, () => {
-        fetch('http://localhost:3000/getInsights', {
+        fetch('http://localhost:3000/getInsights?screenName=' + this.state.screenName, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
           },
-          body: {
-            screenName,
-          }
+          body: JSON.stringify({
+            screenName: this.state.screenName,
+          }),
         })
         .then(response => response.json())
         .then( resJson => {
@@ -50,12 +53,13 @@ class AnalysisContent extends React.Component {
   }
   update(property) {
     console.log(this.state.screenName);
-    return event => this.setState({[property]: event.target.value, needs: [], personality:[], values: [], tones: []})
+    return event => this.setState({screenName: event.target.value, needs: [], personality:[], values: [], tones: []})
   }
 
   render() {
     const buttonText = this.state.submitting ? "Watson On it!" : "Submit Account";
     const errorText = this.state.error === '' ? null : <p style={{color: 'red'}}>{this.state.error}</p>;
+    const display = this.state.personality.length === 0 ? {visibility: 'hidden'} : {visibility: 'visible'};
       return (
         <div>
            <h1 className="new-comment">Enter A Twitter Account Screen Name:</h1>
@@ -72,25 +76,25 @@ class AnalysisContent extends React.Component {
            <button className="btn" onClick={this.getTwitterData} disabled={this.state.submitting} style={{fontSize: '18px', marginTop: '10px'}}>{buttonText}</button>
            {errorText}
            <div>
-             <h3>Personality:</h3>
+             <h3 style={display}>Personality:</h3>
              {this.state.personality.map(element => {
                return(<p>
                  {element.name}: {Math.round(100*element.percentile)}%
                 </p>)
              })}
-             <h3>Needs:</h3>
+             <h3 style={display}>Needs:</h3>
              {this.state.needs.map(element => {
                return(<p>
                  {element.name}: {Math.round(100*element.percentile)}%
                 </p>)
              })}
-             <h3>Values:</h3>
+             <h3 style={display}>Values:</h3>
              {this.state.values.map(element => {
                return(<p>
                  {element.name}: {Math.round(100*element.percentile)}%
                 </p>)
              })}
-             <h3>Tones:</h3>
+             <h3 style={display}>Tones:</h3>
              {this.state.tones.map(element => {
                return(<p>
                  {element.tone_name}: {Math.round(100*element.score)}%
