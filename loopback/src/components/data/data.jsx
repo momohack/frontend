@@ -11,47 +11,54 @@ class AnalysisContent extends React.Component {
       values: [],
       tones: [],
       submitting: false,
+      error: '',
     };
     this.getTwitterData = this.getTwitterData.bind(this);
   }
 
   getTwitterData(screenName){
-    this.setState({submitting: true}, () => {
-    fetch('http://localhost:3000/getInsights', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body: {
-        screenName,
-      }
-    })
-    .then(response => response.json())
-    .then( resJson => {
-      console.log(resJson);
-      this.setState({
-        personality: resJson.personalityInsights.personality,
-        needs: resJson.personalityInsights.needs,
-        values: resJson.personalityInsights.values,
-        tones: resJson.toneAnalysis.document_tone.tone_categories[2].tones,
-        submitting: false,
-      }, () => {
-        console.log('state is now:');
-        console.log(this.state);
-      })
-    });
-    });
+    if(this.state.screenName === ''){
+      this.setState({ error: 'Please enter a Screen Name.'})
+    } else {
+      this.setState({submitting: true}, () => {
+        fetch('http://localhost:3000/getInsights', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: {
+            screenName,
+          }
+        })
+        .then(response => response.json())
+        .then( resJson => {
+          console.log(resJson);
+          this.setState({
+            personality: resJson.personalityInsights.personality,
+            needs: resJson.personalityInsights.needs,
+            values: resJson.personalityInsights.values,
+            tones: resJson.toneAnalysis.document_tone.tone_categories[2].tones,
+            submitting: false,
+          }, () => {
+            console.log('state is now:');
+            console.log(this.state);
+          })
+        });
+      });
+    }
   }
   update(property) {
+    console.log(this.state.screenName);
     return event => this.setState({[property]: event.target.value, needs: [], personality:[], values: [], tones: []})
   }
 
   render() {
-    const buttonText = this.state.submitting ? "Submitting! Please Wait" : "Submit Account"
+    const buttonText = this.state.submitting ? "Watson On it!" : "Submit Account";
+    const errorText = this.state.error === '' ? null : <p style={{color: 'red'}}>{this.state.error}</p>;
       return (
         <div>
-           <h1 className="new-comment">Enter A Twitter Account</h1>
+           <h1 className="new-comment">Enter A Twitter Account Screen Name:</h1>
            <label>
              <input
                className="comment-input"
@@ -61,7 +68,9 @@ class AnalysisContent extends React.Component {
                style={{fontSize: '24px'}}
                required/>
            </label>
-           <button className="new-button" onClick={this.getTwitterData} disabled={this.state.submitting}>{buttonText}</button>
+           <br />
+           <button className="btn" onClick={this.getTwitterData} disabled={this.state.submitting} style={{fontSize: '18px', marginTop: '10px'}}>{buttonText}</button>
+           {errorText}
            <div>
              <h3>Personality:</h3>
              {this.state.personality.map(element => {

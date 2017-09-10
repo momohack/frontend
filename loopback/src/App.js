@@ -8,7 +8,7 @@ class App extends Component {
       <div className="App">
         <div className="App-header">
           <img src={require('./logo.png')} style={{ width: '500px', marginTop: '50px'}} />
-
+          <h3>Powered by IBM Watson</h3>
         </div>
           <AnalysisContent/>
         </div>
