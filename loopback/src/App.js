@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import './App.css';
-import PositionIndex from './components/positions/position';
 import AnalysisContent from './components/data/data';
 
 class App extends Component {
@@ -8,12 +7,9 @@ class App extends Component {
     return (
       <div className="App">
         <div className="App-header">
-
-          <h2>Welcome to TraitMeter</h2>
+          <img src={require('./logo.png')} style={{ width: '500px', marginTop: '50px'}} />
 
         </div>
-          <h3>Select A Position</h3>
-          <PositionIndex/>
           <AnalysisContent/>
         </div>
     );
