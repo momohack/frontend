@@ -17,15 +17,12 @@ class AnalysisContent extends React.Component {
     this.getTwitterData = this.getTwitterData.bind(this);
   }
 
-  getTwitterData(screenName){
+  async getTwitterData(screenName){
     if(this.state.screenName === ''){
       this.setState({ error: 'Please enter a Screen Name.'});
     } else {
-      console.log('sending screen name');
-      console.log(screenName);
-      console.log(this.state.screenName);
-      this.setState({submitting: true}, () => {
-        fetch('http://localhost:3000/getInsights?screenName=' + this.state.screenName, {
+      await this.setState({submitting: true}, () => {
+         fetch('http://localhost:3000/getInsights?screenName=' + this.state.screenName, {
           method: 'POST',
           headers: {
             'Accept': 'application/json',
@@ -37,7 +34,6 @@ class AnalysisContent extends React.Component {
         })
         .then(response => response.json())
         .then( resJson => {
-          console.log(resJson);
           this.setState({
             personality: resJson.personalityInsights.personality,
             needs: resJson.personalityInsights.needs,
@@ -53,7 +49,6 @@ class AnalysisContent extends React.Component {
     }
   }
   update(property) {
-    console.log(this.state.screenName);
     return event => this.setState({screenName: event.target.value, needs: [], personality:[], values: [], tones: []})
   }
 
