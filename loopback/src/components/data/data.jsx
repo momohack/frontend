@@ -1,5 +1,6 @@
 import React from 'react';
 import {getTwitterInsights} from '../../util/util';
+import ChartData from '../chart/chart';
 
 class AnalysisContent extends React.Component {
   constructor(props) {
@@ -18,7 +19,7 @@ class AnalysisContent extends React.Component {
 
   getTwitterData(screenName){
     if(this.state.screenName === ''){
-      this.setState({ error: 'Please enter a Screen Name.'})
+      this.setState({ error: 'Please enter a Screen Name.'});
     } else {
       console.log('sending screen name');
       console.log(screenName);
@@ -81,6 +82,7 @@ class AnalysisContent extends React.Component {
                return(<p>
                  {element.name}: {Math.round(100*element.percentile)}%
                 </p>)
+
              })}
              <h3 style={display}>Needs:</h3>
              {this.state.needs.map(element => {
@@ -100,6 +102,8 @@ class AnalysisContent extends React.Component {
                  {element.tone_name}: {Math.round(100*element.score)}%
                 </p>)
              })}
+             {console.log(this.state.personality)}
+             <ChartData data={this.state.personality}/>;
            </div>
         </div>
       );
