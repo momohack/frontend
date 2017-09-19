@@ -17,11 +17,11 @@ class AnalysisContent extends React.Component {
     this.getTwitterData = this.getTwitterData.bind(this);
   }
 
-  async getTwitterData(screenName){
+   getTwitterData(screenName){
     if(this.state.screenName === ''){
       this.setState({ error: 'Please enter a Screen Name.'});
     } else {
-      await this.setState({submitting: true}, () => {
+      this.setState({submitting: true}, () => {
          fetch('http://localhost:3000/getInsights?screenName=' + this.state.screenName, {
           method: 'POST',
           headers: {
@@ -35,15 +35,15 @@ class AnalysisContent extends React.Component {
         .then(response => response.json())
         .then( resJson => {
           this.setState({
-            personality: resJson.personalityInsights.personality,
-            needs: resJson.personalityInsights.needs,
-            values: resJson.personalityInsights.values,
+            personality: resJson.personalityInsights.personality || 1,
+            needs: resJson.personalityInsights.needs || 1,
+            values: resJson.personalityInsights.values || 1,
             tones: resJson.toneAnalysis.document_tone.tone_categories[2].tones,
             submitting: false,
           }, () => {
             console.log('state is now:');
             console.log(this.state);
-          })
+          });
         });
       });
     }
