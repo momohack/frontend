@@ -9,9 +9,9 @@ class ChartData extends React.Component {
         labels: null,
         datasets: [
           {
-            label: "chart-test",
             data: null,
-            backgroundColor: "rgba(153,255,51,0.4)",
+            label: "chart-test",
+            backgroundColor: "rgba(153,255,251,0.4)"
           }
         ]
 
@@ -23,7 +23,7 @@ class ChartData extends React.Component {
 
   fixState() {
     this.state.data.labels = this.label_maker();
-    this.state.data.datasets.data = this.value_maker();
+    this.state.data.datasets[0].data = this.value_maker();
   }
 
   label_maker() {
@@ -46,8 +46,8 @@ class ChartData extends React.Component {
 
 
   render() {
-    console.log(this.state.data);
     this.fixState();
+    console.log(this.state.data);
     const data = this.state.data;
       return (
 
